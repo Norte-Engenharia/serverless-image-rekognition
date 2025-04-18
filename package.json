@@ -4,7 +4,8 @@
   "description": "image-analysis",
   "main": "handler.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "deploy":"sh scripts/deploy.sh",
+    "invoke": "sh scripts/invoke.sh",
     "build": "tsc"
   },
   "keywords": [],

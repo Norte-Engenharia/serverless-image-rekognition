@@ -4,4 +4,5 @@ yarn install --production
 yarn build
 zip -r lambda.zip dist node_modules
 terraform apply
+rm -rf lambda.zip
 yarn
