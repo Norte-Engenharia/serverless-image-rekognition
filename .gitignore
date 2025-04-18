@@ -13,3 +13,5 @@ terraform.tfstate.backup
 .terraform
 output.json
 dist
+
+.DS_Store
