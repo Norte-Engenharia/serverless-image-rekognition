@@ -5,3 +5,10 @@ jspm_packages
 # Serverless directories
 .serverless
 package-lock.json
+.terraform.lock.hcl
+lambda.zip
+terraform.tfstate
+terraform.tfstate.backup
+.serverless
+.terraform
+output.json

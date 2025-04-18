@@ -1,5 +1,4 @@
 'use strict';
-
 class Handler{
 
   constructor({rekoSvc, translatorSvc}){
@@ -15,12 +14,12 @@ class Handler{
     })
     .promise()
 
-    const workingItems = result.Labels.filter(({Confidence})=> Confidence > 80);
+    const workingItems = result.Labels.filter(({Confidence})=> Confidence > 50);
     const names  = workingItems
     .map(({Name})=>Name)
     .join(" and ")
 
-    return {names, workingItems}
+    return result
     
   }
 
@@ -33,7 +32,8 @@ class Handler{
 
     const {TranslatedText} = await this.translatorSvc
                               .translateText(params)
-                              .promise();                              
+                              .promise();        
+                                                    
     return TranslatedText.split(' e ');
   }
 
@@ -43,7 +43,7 @@ class Handler{
     for(const indexText in texts){
       const nameInPortuguese = texts[indexText];
       const confidence = workingItems[indexText].Confidence;
-      finalTexts.push(`A imagem possui ${confidence.toFixed(3)} de ser um(a) ${nameInPortuguese}`);
+      finalTexts.push(`A imagem possui ${confidence.toFixed(3)}% de ter um(a) ${nameInPortuguese}`);
     }
 
     return finalTexts;
@@ -69,19 +69,18 @@ class Handler{
       const imgBuffer = await this.getImageBuffer(imageUrl)
       console.log("Detecting labels...");
 
-      const {names, workingItems} = await this.detectImageLabels(imgBuffer);
-
+      const result = await this.detectImageLabels(imgBuffer);
       console.log("Translating to portuguese...");
-      const texts = await this.translateText(names);
+      // const texts = await this.translateText(names);
 
       console.log("Handling final object...");
 
-      const finalTexts = this.formatTextResults(texts, workingItems);
+      // const finalTexts = this.formatTextResults(texts, workingItems);
 
       console.log("finishing...");
       return {
         statusCode:200,
-        body:finalTexts.join(",\n")
+        body:JSON.stringify(result)
       }
     } catch (error) {
       console.error("ERROR->",error.stack);
