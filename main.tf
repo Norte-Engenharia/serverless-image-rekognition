@@ -43,7 +43,7 @@ resource "aws_lambda_function" "image_analysis" {
   filename         = "lambda.zip"
   function_name    = "imageAnalysis"
   role             = aws_iam_role.lambda_role.arn
-  handler          = "handler.main"
+  handler          = "dist/handler.main"
   runtime          = "nodejs18.x"
   timeout          = 30
   source_code_hash = filebase64sha256("lambda.zip")

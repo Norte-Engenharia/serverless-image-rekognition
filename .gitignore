@@ -12,3 +12,4 @@ terraform.tfstate.backup
 .serverless
 .terraform
 output.json
+dist
