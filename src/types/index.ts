@@ -11,7 +11,10 @@ export  interface HandlerDependencies {
   }
   
 export interface Event {
-    queryStringParameters: {
-      imageUrl: string;
-    };
+    Records: {
+      body: string;
+    }[];
+    // queryStringParameters: {
+    //   imageUrl: string;
+    // };
 }

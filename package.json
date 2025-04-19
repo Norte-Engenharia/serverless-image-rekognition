@@ -4,7 +4,7 @@
   "description": "image-analysis",
   "main": "handler.js",
   "scripts": {
-    "deploy":"sh scripts/deploy.sh",
+    "deploy": "sh scripts/deploy.sh",
     "invoke": "sh scripts/invoke.sh",
     "build": "tsc"
   },
@@ -17,6 +17,9 @@
     "typescript": "^5.8.3"
   },
   "devDependencies": {
-    "@types/node": "^22.14.1"
+    "@aws-sdk/client-sqs": "^3.787.0",
+    "@types/node": "^22.14.1",
+    "dotenv": "^16.5.0",
+    "ts-node": "^10.9.2"
   }
 }
