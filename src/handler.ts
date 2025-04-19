@@ -33,17 +33,19 @@ export default class Handler {
       }
 
       await this.ensureDbConnection();
-      let isLastChunk = false;
 
       const results = await Promise.all(
         records.map(async (record) => {
           try {
-            const { imageUrl, isLast, projectId, photoId } = JSON.parse(record.body);
+            const { imageUrl, projectId, photoId } = JSON.parse(record.body);
             console.log({ imageUrl, projectId, photoId });
 
-            if (isLast) {
-              isLastChunk = true;
+            const existingLabels = await DetectedLabels.findOne({ photoId });
+            if (existingLabels) {
+              console.log(`Labels already detected for photoId: ${photoId}`);
+              return { success: true, result: existingLabels };
             }
+
             if (!imageUrl) {
               throw new Error('imageUrl is missing in the SQS message body');
             }

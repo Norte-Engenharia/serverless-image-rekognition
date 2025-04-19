@@ -21,4 +21,6 @@ const DetectedLabelsSchema = new Schema({
 
 }, { timestamps: true });
 
+DetectedLabelsSchema.index({ photoId: 1 }, { unique: true });
+
 export default Model('detectedLabels', DetectedLabelsSchema);
