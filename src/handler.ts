@@ -1,6 +1,7 @@
 'use strict';
 import { HandlerDependencies, Event } from './types';
 import RekognitionService from './services/rekognitionService';
+import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
 
 class Handler {
   private rekoSvc: RekognitionService;
@@ -16,29 +17,18 @@ class Handler {
         throw new Error('No records found in the SQS event');
       }
 
-      const results = await Promise.all(
-        records.map(async (record) => {
-          try {
-            const { imageBase64 } = JSON.parse(record.body);
+      const { imageUrl } = JSON.parse(records[0].body);
 
-            if (!imageBase64) {
-              throw new Error('imageBase64 is missing in the SQS message body');
-            }
+      if (!imageUrl) {
+        throw new Error('imageUrl is missing in the SQS message body');
+      }
 
-            const imgBuffer = Buffer.from(imageBase64, 'base64');
-            const result = await this.rekoSvc.detectImageLabels(imgBuffer);
-
-            return { success: true, result };
-          } catch (error: any) {
-            console.error('Error processing record:', error.stack);
-            return { success: false, error: error.message };
-          }
-        })
-      );
+      const imgBuffer = await getImageBufferFromUrl(imageUrl);
+      const result = await this.rekoSvc.detectImageLabels(imgBuffer);
 
       return {
         statusCode: 200,
-        body: JSON.stringify(results),
+        body: JSON.stringify(result),
       };
     } catch (error: any) {
       console.error('ERROR->', error.stack);
