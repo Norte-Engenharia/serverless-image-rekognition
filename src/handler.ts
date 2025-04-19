@@ -17,18 +17,29 @@ class Handler {
         throw new Error('No records found in the SQS event');
       }
 
-      const { imageUrl } = JSON.parse(records[0].body);
+      const results = await Promise.all(
+        records.map(async (record) => {
+          try {
+            const { imageUrl } = JSON.parse(record.body);
 
-      if (!imageUrl) {
-        throw new Error('imageUrl is missing in the SQS message body');
-      }
+            if (!imageUrl) {
+              throw new Error('imageUrl is missing in the SQS message body');
+            }
 
-      const imgBuffer = await getImageBufferFromUrl(imageUrl);
-      const result = await this.rekoSvc.detectImageLabels(imgBuffer);
+            const imgBuffer = await getImageBufferFromUrl(imageUrl);
+            const result = await this.rekoSvc.detectImageLabels(imgBuffer);
+
+            return { success: true, result };
+          } catch (error: any) {
+            console.error('Error processing record:', error.stack);
+            return { success: false, error: error.message };
+          }
+        })
+      );
 
       return {
         statusCode: 200,
-        body: JSON.stringify(result),
+        body: JSON.stringify(results),
       };
     } catch (error: any) {
       console.error('ERROR->', error.stack);
