@@ -5,7 +5,7 @@ if [ -f .env ]; then
 fi
 
 rm -rf node_modules dist lambda.zip
-yarn install --production
+yarn install
 yarn build
 zip -r lambda.zip dist node_modules
 
