@@ -1,0 +1,416 @@
+{
+    "Labels": [
+      {
+        "Name": "Nature",
+        "Confidence": 99.99186706542969,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Outdoors"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Outdoors",
+        "Confidence": 99.99186706542969,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Scenery",
+        "Confidence": 99.99186706542969,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Nature"
+          },
+          {
+            "Name": "Outdoors"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Field",
+        "Confidence": 99.98545837402344,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Grassland",
+        "Confidence": 99.98545837402344,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Field"
+          },
+          {
+            "Name": "Nature"
+          },
+          {
+            "Name": "Outdoors"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Road",
+        "Confidence": 99.98068237304688,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Transport and Logistics"
+          }
+        ]
+      },
+      {
+        "Name": "Landscape",
+        "Confidence": 98.38047790527344,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Nature"
+          },
+          {
+            "Name": "Outdoors"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Car",
+        "Confidence": 96.1058349609375,
+        "Instances": [
+          {
+            "BoundingBox": {
+              "Width": 0.16866610944271088,
+              "Height": 0.145818293094635,
+              "Left": 0.39321449398994446,
+              "Top": 0.6539884209632874
+            },
+            "Confidence": 96.1058349609375
+          }
+        ],
+        "Parents": [
+          {
+            "Name": "Transportation"
+          },
+          {
+            "Name": "Vehicle"
+          }
+        ],
+        "Aliases": [
+          {
+            "Name": "Automobile"
+          }
+        ],
+        "Categories": [
+          {
+            "Name": "Vehicles and Automotive"
+          }
+        ]
+      },
+      {
+        "Name": "Transportation",
+        "Confidence": 96.1058349609375,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Vehicles and Automotive"
+          }
+        ]
+      },
+      {
+        "Name": "Vehicle",
+        "Confidence": 96.1058349609375,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Transportation"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Vehicles and Automotive"
+          }
+        ]
+      },
+      {
+        "Name": "Panoramic",
+        "Confidence": 94.9712142944336,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Landscape"
+          },
+          {
+            "Name": "Nature"
+          },
+          {
+            "Name": "Outdoors"
+          },
+          {
+            "Name": "Scenery"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Utility Pole",
+        "Confidence": 90.10261535644531,
+        "Instances": [
+          {
+            "BoundingBox": {
+              "Width": 0.010279189795255661,
+              "Height": 0.099105104804039,
+              "Left": 0.08681373298168182,
+              "Top": 0.5178487300872803
+            },
+            "Confidence": 90.10261535644531
+          },
+          {
+            "BoundingBox": {
+              "Width": 0.010906116105616093,
+              "Height": 0.13740262389183044,
+              "Left": 0.009679378941655159,
+              "Top": 0.49466776847839355
+            },
+            "Confidence": 70.43753051757812
+          }
+        ],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Transport and Logistics"
+          }
+        ]
+      },
+      {
+        "Name": "Photography",
+        "Confidence": 85.7740249633789,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [
+          {
+            "Name": "Photo"
+          }
+        ],
+        "Categories": [
+          {
+            "Name": "Hobbies and Interests"
+          }
+        ]
+      },
+      {
+        "Name": "Sky",
+        "Confidence": 82.95750427246094,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Nature"
+          },
+          {
+            "Name": "Outdoors"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Mound",
+        "Confidence": 79.526611328125,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Field"
+          },
+          {
+            "Name": "Grassland"
+          },
+          {
+            "Name": "Nature"
+          },
+          {
+            "Name": "Outdoors"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Buildings and Architecture"
+          }
+        ]
+      },
+      {
+        "Name": "Freeway",
+        "Confidence": 75.0341796875,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Road"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Transport and Logistics"
+          }
+        ]
+      },
+      {
+        "Name": "Water",
+        "Confidence": 67.96939849853516,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Railway",
+        "Confidence": 56.471622467041016,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Transportation"
+          }
+        ],
+        "Aliases": [
+          {
+            "Name": "Rail"
+          },
+          {
+            "Name": "Train Track"
+          }
+        ],
+        "Categories": [
+          {
+            "Name": "Transport and Logistics"
+          }
+        ]
+      },
+      {
+        "Name": "Highway",
+        "Confidence": 56.068729400634766,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Freeway"
+          },
+          {
+            "Name": "Road"
+          }
+        ],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Transport and Logistics"
+          }
+        ]
+      },
+      {
+        "Name": "Gravel",
+        "Confidence": 55.6446533203125,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Road"
+          }
+        ],
+        "Aliases": [
+          {
+            "Name": "Dirt Road"
+          }
+        ],
+        "Categories": [
+          {
+            "Name": "Materials"
+          }
+        ]
+      },
+      {
+        "Name": "Summer",
+        "Confidence": 55.38567352294922,
+        "Instances": [],
+        "Parents": [],
+        "Aliases": [],
+        "Categories": [
+          {
+            "Name": "Nature and Outdoors"
+          }
+        ]
+      },
+      {
+        "Name": "Tarmac",
+        "Confidence": 55.28246307373047,
+        "Instances": [],
+        "Parents": [
+          {
+            "Name": "Road"
+          }
+        ],
+        "Aliases": [
+          {
+            "Name": "Asphalt"
+          }
+        ],
+        "Categories": [
+          {
+            "Name": "Transport and Logistics"
+          }
+        ]
+      }
+    ],
+    "LabelModelVersion": "3.0"
+  }
