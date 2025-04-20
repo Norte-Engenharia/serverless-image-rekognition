@@ -3,7 +3,9 @@ name: Upload Lambda to S3
 on:
   push:
     branches:
-      - master
+      - development
+      - hmg
+      - prd
 
 jobs:
   deploy:
@@ -40,4 +42,6 @@ jobs:
           aws-region: us-east-1
 
       - name: Executar script de deploy
-        run: sh scripts/deploy.sh
+        run: |
+          STAGE=$(echo "${GITHUB_REF#refs/heads/}")
+          sh scripts/deploy.sh $STAGE
