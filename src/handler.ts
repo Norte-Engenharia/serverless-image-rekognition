@@ -1,9 +1,9 @@
 'use strict';
 import { HandlerDependencies, Event } from './types';
 import RekognitionService from './services/rekognitionService';
-import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
 import mongoose from 'mongoose';
 import DetectedLabels from './database/models/DetectedLabels';
+import { renderImageAndCapture } from './utils/renderImageAndCapture';
 
 export default class Handler {
   private rekoSvc: RekognitionService;
@@ -50,9 +50,14 @@ export default class Handler {
               throw new Error('imageUrl is missing in the SQS message body');
             }
 
-            const imgBuffer = await getImageBufferFromUrl(imageUrl);
-            const result = await this.rekoSvc.detectImageLabels(imgBuffer);
+            const imgBufferRederedAndCaptured = await renderImageAndCapture(imageUrl);
+            if(!imgBufferRederedAndCaptured.success || !imgBufferRederedAndCaptured.payload){
+              throw new Error("Failed to load image from puppeteer")
+            }
 
+            console.log("Image captured successfully");
+            const result = await this.rekoSvc.detectImageLabels(imgBufferRederedAndCaptured.payload);
+            
             const detectedLabels = new DetectedLabels({
               photoId,
               Labels: result.Labels,
