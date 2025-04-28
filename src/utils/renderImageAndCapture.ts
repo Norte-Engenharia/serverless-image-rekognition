@@ -1,6 +1,6 @@
-import chromium from 'chrome-aws-lambda';
 import puppeteer, { Browser, Page } from 'puppeteer-core';
 import path from 'path';
+import chromium from '@sparticuz/chromium';
 
 export async function renderImageAndCapture(imageUrl: string): Promise<{ success: boolean; payload?: Buffer }> {
     let browser: Browser | null = null;
@@ -11,7 +11,7 @@ export async function renderImageAndCapture(imageUrl: string): Promise<{ success
         browser = await puppeteer.launch({
             args: chromium.args,
             defaultViewport: chromium.defaultViewport,
-            executablePath: await chromium.executablePath,
+            executablePath: await chromium.executablePath(),
             headless: chromium.headless,
         });
 
