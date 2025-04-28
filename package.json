@@ -12,12 +12,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@sparticuz/chromium": "^133.0.0",
     "aws-sdk": "^2.1181.0",
     "axios": "^0.27.2",
     "mongoose": "^8.13.2",
-    "puppeteer": "^24.7.2",
-    "puppeteer-core": "^24.7.2",
     "typescript": "^5.8.3"
   },
   "devDependencies": {
