@@ -1,4 +1,3 @@
-import { writeFile } from "fs/promises"
 import { renderImageAndCapture } from "../renderImageAndCapture"
 
 async function run() {
