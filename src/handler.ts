@@ -4,6 +4,7 @@ import RekognitionService from './services/rekognitionService';
 import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
 import mongoose from 'mongoose';
 import DetectedLabels from './database/models/DetectedLabels';
+import { renderImageAndCapture } from './utils/renderImageAndCapture';
 
 export default class Handler {
   private rekoSvc: RekognitionService;
@@ -50,8 +51,13 @@ export default class Handler {
               throw new Error('imageUrl is missing in the SQS message body');
             }
 
-            const imgBuffer = await getImageBufferFromUrl(imageUrl);
-            const result = await this.rekoSvc.detectImageLabels(imgBuffer);
+            const croppedImageBuffer = (await renderImageAndCapture(imageUrl))
+
+            if (!croppedImageBuffer.payload || !croppedImageBuffer.success) {
+              throw new Error('Error while cropping image');
+            }
+            
+            const result = await this.rekoSvc.detectImageLabels(croppedImageBuffer.payload);
 
             const detectedLabels = new DetectedLabels({
               photoId,
