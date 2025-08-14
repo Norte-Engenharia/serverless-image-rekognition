@@ -64,8 +64,6 @@ export default class Handler {
               ContentType: 'image/jpeg',
             }).promise();
 
-            console.log(`Back face image uploaded to S3: debug/backFace-${photoId}.jpg`);
-
             const result = await this.rekoSvc.detectImageLabels(backFaceBuffer);
 
             const detectedLabels = new DetectedLabels({
