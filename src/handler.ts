@@ -1,10 +1,11 @@
 'use strict';
 import { HandlerDependencies, Event } from './types';
 import RekognitionService from './services/rekognitionService';
-import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
 import mongoose from 'mongoose';
 import DetectedLabels from './database/models/DetectedLabels';
-import { renderImageAndCapture } from './utils/renderImageAndCapture';
+import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
+import { transformToCubemap } from './utils/transformToCubemap';
+import { S3 } from 'aws-sdk';
 
 export default class Handler {
   private rekoSvc: RekognitionService;
@@ -51,13 +52,21 @@ export default class Handler {
               throw new Error('imageUrl is missing in the SQS message body');
             }
 
-            const croppedImageBuffer = (await renderImageAndCapture(imageUrl))
+            const imageBuffer = await getImageBufferFromUrl(imageUrl)
 
-            if (!croppedImageBuffer.payload || !croppedImageBuffer.success) {
-              throw new Error('Error while cropping image');
-            }
-            
-            const result = await this.rekoSvc.detectImageLabels(croppedImageBuffer.payload);
+            const backFaceBuffer = await transformToCubemap(imageBuffer, 1024);
+
+            const s3 = new S3();
+            await s3.putObject({
+              Bucket: 'global-norte',
+              Key: `lambda-debug/backFace-${photoId}.jpg`,
+              Body: backFaceBuffer,
+              ContentType: 'image/jpeg',
+            }).promise();
+
+            console.log(`Back face image uploaded to S3: debug/backFace-${photoId}.jpg`);
+
+            const result = await this.rekoSvc.detectImageLabels(backFaceBuffer);
 
             const detectedLabels = new DetectedLabels({
               photoId,
