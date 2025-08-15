@@ -13,25 +13,17 @@ const orientations: Record<string, (out: any, x: number, y: number) => void> = {
   ny: (out, x, y) => { out.x =  y; out.y = -x; out.z = -1; },
 };
 
-export async function transformToCubemap(imageBuffer: Buffer, faceSize = 1024): Promise<Buffer> {
-  const { data, info } = await sharp(imageBuffer)
-    .raw()
-    .ensureAlpha()
-    .toBuffer({ resolveWithObject: true });
+// --- Cache global de mapa de coordenadas ---
+let coordMapCache: { xMap: Int32Array; yMap: Int32Array; size: number } | null = null;
 
-  const readWidth = info.width;
-  const readHeight = info.height;
-  const readData = new Uint8ClampedArray(data);
-
-  const writeData = new Uint8ClampedArray(faceSize * faceSize * 4);
-  const orientation = orientations["pz"]; 
+function generateCoordMap(faceSize: number, width: number, height: number) {
+  const orientation = orientations["pz"];
+  const xMap = new Int32Array(faceSize * faceSize);
+  const yMap = new Int32Array(faceSize * faceSize);
   const cube: any = {};
 
-  for (let x = 0; x < faceSize; x++) {
-    for (let y = 0; y < faceSize; y++) {
-      const to = 4 * (y * faceSize + x);
-      writeData[to + 3] = 255; 
-
+  for (let y = 0; y < faceSize; y++) {
+    for (let x = 0; x < faceSize; x++) {
       orientation(
         cube,
         (2 * (x + 0.5) / faceSize - 1),
@@ -42,21 +34,74 @@ export async function transformToCubemap(imageBuffer: Buffer, faceSize = 1024): 
       const lon = mod(Math.atan2(cube.y, cube.x), 2 * Math.PI);
       const lat = Math.acos(cube.z / r);
 
-      const srcX = readWidth * lon / (Math.PI * 2);
-      const srcY = readHeight * lat / Math.PI;
+      const srcX = Math.round(width * lon / (Math.PI * 2));
+      const srcY = Math.round(height * lat / Math.PI);
 
-      const nearestX = Math.max(0, Math.min(readWidth - 1, Math.round(srcX)));
-      const nearestY = Math.max(0, Math.min(readHeight - 1, Math.round(srcY)));
-
-      const srcIndex = 4 * (nearestY * readWidth + nearestX);
-
-      writeData[to]     = readData[srcIndex];
-      writeData[to + 1] = readData[srcIndex + 1];
-      writeData[to + 2] = readData[srcIndex + 2];
+      xMap[y * faceSize + x] = Math.max(0, Math.min(width - 1, srcX));
+      yMap[y * faceSize + x] = Math.max(0, Math.min(height - 1, srcY));
     }
   }
 
-  return sharp(Buffer.from(writeData), {
+  return { xMap, yMap, size: faceSize };
+}
+
+// --- Função para transformar uma imagem ---
+export async function transformToCubemap(imageBuffer: Buffer, faceSize = 512): Promise<Buffer> {
+  const { data, info } = await sharp(imageBuffer)
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
+
+  const readWidth = info.width!;
+  const readHeight = info.height!;
+  const readData = new Uint8ClampedArray(data);
+
+  // --- Carregar mapa de coordenadas em cache ---
+  if (!coordMapCache || coordMapCache.size !== faceSize) {
+    coordMapCache = generateCoordMap(faceSize, readWidth, readHeight);
+  }
+
+  const { xMap, yMap } = coordMapCache;
+
+  // --- Reusar buffer sem criar cópia ---
+  const writeData = Buffer.allocUnsafe(faceSize * faceSize * 4);
+
+  for (let i = 0; i < faceSize * faceSize; i++) {
+    const srcIndex = 4 * (yMap[i] * readWidth + xMap[i]);
+    const dstIndex = 4 * i;
+
+    writeData[dstIndex]     = readData[srcIndex];
+    writeData[dstIndex + 1] = readData[srcIndex + 1];
+    writeData[dstIndex + 2] = readData[srcIndex + 2];
+    writeData[dstIndex + 3] = 255;
+  }
+
+  return sharp(writeData, {
     raw: { width: faceSize, height: faceSize, channels: 4 }
   }).jpeg().toBuffer();
+}
+
+// --- Função para processar várias imagens com paralelismo controlado ---
+export async function transformImagesBatch(
+  imageBuffers: Buffer[],
+  faceSize = 512,
+  maxParallel = 3 // controla quantas imagens processa em paralelo
+): Promise<Buffer[]> {
+  const results: Buffer[] = [];
+  let index = 0;
+
+  async function worker() {
+    while (index < imageBuffers.length) {
+      const i = index++;
+      results[i] = await transformToCubemap(imageBuffers[i], faceSize);
+    }
+  }
+
+  // --- Cria um pool de workers ---
+  const workers = Array(Math.min(maxParallel, imageBuffers.length))
+    .fill(0)
+    .map(() => worker());
+
+  await Promise.all(workers);
+  return results;
 }
