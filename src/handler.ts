@@ -4,7 +4,6 @@ import RekognitionService from './services/rekognitionService';
 import mongoose from 'mongoose';
 import DetectedLabels from './database/models/DetectedLabels';
 import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
-import { S3 } from 'aws-sdk';
 import { transformToCubemap } from './utils/transformToCubemap';
 
 export default class Handler {
@@ -51,21 +50,9 @@ export default class Handler {
             if (!imageUrl) {
               throw new Error('imageUrl is missing in the SQS message body');
             }
-            console.time('getImageBufferFromUrl');
             const imageBuffer = await getImageBufferFromUrl(imageUrl)
-            console.timeEnd('getImageBufferFromUrl');
 
-            console.time('transformToCubemap');
             const backFaceBuffer = await transformToCubemap(imageBuffer, 512);
-            console.timeEnd('transformToCubemap');
-
-            const s3 = new S3();
-            s3.putObject({
-              Bucket: 'global-norte',
-              Key: `lambda-debug/backFace-${photoId}.jpg`,
-              Body: backFaceBuffer,
-              ContentType: 'image/jpeg',
-            }).promise();
 
             const result = await this.rekoSvc.detectImageLabels(backFaceBuffer);
 
