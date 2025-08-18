@@ -13,7 +13,6 @@ const orientations: Record<string, (out: any, x: number, y: number) => void> = {
   ny: (out, x, y) => { out.x =  y; out.y = -x; out.z = -1; },
 };
 
-// --- Cache global de mapa de coordenadas ---
 let coordMapCache: { xMap: Int32Array; yMap: Int32Array; size: number } | null = null;
 
 function generateCoordMap(faceSize: number, width: number, height: number) {
@@ -45,7 +44,6 @@ function generateCoordMap(faceSize: number, width: number, height: number) {
   return { xMap, yMap, size: faceSize };
 }
 
-// --- Função para transformar uma imagem ---
 export async function transformToCubemap(imageBuffer: Buffer, faceSize = 512): Promise<Buffer> {
   const { data, info } = await sharp(imageBuffer)
     .raw()
@@ -56,14 +54,12 @@ export async function transformToCubemap(imageBuffer: Buffer, faceSize = 512): P
   const readHeight = info.height!;
   const readData = new Uint8ClampedArray(data);
 
-  // --- Carregar mapa de coordenadas em cache ---
   if (!coordMapCache || coordMapCache.size !== faceSize) {
     coordMapCache = generateCoordMap(faceSize, readWidth, readHeight);
   }
 
   const { xMap, yMap } = coordMapCache;
 
-  // --- Reusar buffer sem criar cópia ---
   const writeData = Buffer.allocUnsafe(faceSize * faceSize * 4);
 
   for (let i = 0; i < faceSize * faceSize; i++) {
@@ -81,11 +77,10 @@ export async function transformToCubemap(imageBuffer: Buffer, faceSize = 512): P
   }).jpeg().toBuffer();
 }
 
-// --- Função para processar várias imagens com paralelismo controlado ---
 export async function transformImagesBatch(
   imageBuffers: Buffer[],
   faceSize = 512,
-  maxParallel = 3 // controla quantas imagens processa em paralelo
+  maxParallel = 3
 ): Promise<Buffer[]> {
   const results: Buffer[] = [];
   let index = 0;
@@ -97,7 +92,6 @@ export async function transformImagesBatch(
     }
   }
 
-  // --- Cria um pool de workers ---
   const workers = Array(Math.min(maxParallel, imageBuffers.length))
     .fill(0)
     .map(() => worker());
