@@ -1,9 +1,10 @@
 'use strict';
 import { HandlerDependencies, Event } from './types';
 import RekognitionService from './services/rekognitionService';
-import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
 import mongoose from 'mongoose';
 import DetectedLabels from './database/models/DetectedLabels';
+import { getImageBufferFromUrl } from './utils/getImageBufferFromUrl';
+import { transformToCubemap } from './utils/transformToCubemap';
 
 export default class Handler {
   private rekoSvc: RekognitionService;
@@ -49,9 +50,11 @@ export default class Handler {
             if (!imageUrl) {
               throw new Error('imageUrl is missing in the SQS message body');
             }
+            const imageBuffer = await getImageBufferFromUrl(imageUrl)
 
-            const imgBuffer = await getImageBufferFromUrl(imageUrl);
-            const result = await this.rekoSvc.detectImageLabels(imgBuffer);
+            const backFaceBuffer = await transformToCubemap(imageBuffer, 512);
+
+            const result = await this.rekoSvc.detectImageLabels(backFaceBuffer);
 
             const detectedLabels = new DetectedLabels({
               photoId,

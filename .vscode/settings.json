@@ -6,7 +6,7 @@
         "**/CVS": true,
         "**/.DS_Store": true,
         "**/Thumbs.db": true,
-        "**/dist": true,
+        // "**/dist": true,
         "**/node_modules": true,
         "**/*.terraform*":true,
         "terraform.tfstate": true,
