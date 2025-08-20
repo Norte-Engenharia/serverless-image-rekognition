@@ -12,7 +12,6 @@ fi
 
 rm -rf node_modules dist lambda.zip
 yarn install
-yarn remove puppeteer-core chrome-aws-lambda
 yarn build
 cp viewer.html dist/viewer.html 
 zip -r lambda.zip dist node_modules
